@@ -1,11 +1,7 @@
-import { Router } from 'express';
-import { AuthController } from '../controllers/authController';
+import { Request, Response } from 'express';
 
-const router = Router();
-const authController = new AuthController();
+const registerUser = (req: Request, res: Response) => {
+  // Your function implementation
+};
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.get('/profile', authController.getProfile);
-
-export default router;
+export default registerUser;

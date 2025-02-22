@@ -1,21 +1,27 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import { authRoutes } from './routes/authRoutes';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-// Routes
-app.use('/api/auth', authRoutes);
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`User service running on port ${PORT}`);
+// Health check endpoint
+app.get('/health', (_req: any, res: { send: (arg0: string) => void; }) => {
+    res.send('User service is running');
 });
 
-export default app;
+// Use authentication routes
+app.use('/auth', authRoutes);
+
+// Example usage of environment variables:
+console.log(`JWT Secret: ${process.env.JWT_SECRET}`);
+
+// Start your server
+app.listen(port, () => {
+    console.log(`User service listening on port ${port}`);
+});
