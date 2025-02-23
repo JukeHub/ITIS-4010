@@ -83,3 +83,87 @@ Instructions:
 
 Please generate all necessary code files (backend, frontend, Docker configuration, and sample tests) for a fully functioning version of VeriLens.
 */
+
+TECH
+
+Frontend
+
+    React:
+        For building a responsive, component-based user interface.
+    React Router:
+        To manage client-side routing (login, news feed, educational modules, etc.).
+    Redux or Context API:
+        For state management across the app.
+    Tailwind CSS / Material-UI:
+        For rapid UI styling and design consistency.
+    Axios / Fetch API:
+        For secure HTTP requests to backend APIs.
+
+Backend / API
+
+    Node.js with Express:
+        For building RESTful microservices and the API Gateway.
+    JWT & OAuth2 Libraries:
+        To handle secure authentication and authorization.
+    Microservices Architecture:
+        Separate services for User Management, News Aggregation, AI functions, and Education.
+    API Gateway / Central Router:
+        To route requests between services securely.
+    Docker & Docker Compose:
+        For containerization and local/cloud deployment orchestration.
+
+Databases & Caching
+
+    Primary Database (PostgreSQL or MongoDB):
+        PostgreSQL for relational data (user profiles, articles, educational content) or MongoDB for a more flexible, document-based model.
+    Redis:
+        For caching frequently accessed data (e.g., summaries, bias ratings) and session management.
+    Elasticsearch / OpenSearch:
+        For fast, bias-aware search functionality and analytics.
+
+AI & Machine Learning Components
+
+    AI Models / Libraries:
+        TensorFlow.js, PyTorch, or Hugging Face Transformers (for advanced summarization and bias detection).
+    Custom Node.js AI Service:
+        Wrap AI components as separate microservices to keep them isolated and scalable.
+    Explainable AI (XAI) Libraries:
+        Tools like LIME or SHAP (for later explainability of bias detection, if needed).
+
+Infrastructure & Cloud Services
+
+    Amazon Web Services (AWS):
+        ECS Fargate / Kubernetes: Container orchestration for deploying microservices.
+        Application Load Balancer (ALB): For secure routing of requests.
+        RDS (PostgreSQL) or DocumentDB (for MongoDB): Managed database service.
+        ElastiCache (Redis): Managed caching.
+        CloudFront & S3: For serving static assets and content delivery.
+        API Gateway & AWS WAF: For managing API traffic and security.
+    CI/CD Tools:
+        AWS CodePipeline/CodeBuild or GitHub Actions for continuous integration and deployment.
+
+Security
+
+    HTTPS / TLS:
+        Enforce secure communication between all services.
+    JWT / Multi-Factor Authentication:
+        For secure user authentication.
+    Role-Based Access Control (RBAC):
+        To restrict access to various parts of the system.
+    Encryption:
+        Data encryption at rest (via AWS KMS) and in transit.
+    Monitoring & Logging:
+        CloudWatch, AWS X-Ray, and centralized logging (e.g., using Winston) for auditing and incident response.
+
+Development & Testing Tools
+
+    Version Control:
+        Git (with GitHub for repository hosting).
+    IDE / Code Editors:
+        VS Code or similar, with GitHub Copilot for AI-assisted coding.
+    Automated Testing:
+        Jest, Mocha, or similar frameworks for unit and integration tests.
+    Code Linting & Formatting:
+        ESLint, Prettier to enforce code quality.
+    Documentation:
+        README.md, inline documentation, and API documentation tools (Swagger/OpenAPI).
