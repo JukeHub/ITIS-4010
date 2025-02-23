@@ -3,12 +3,11 @@ import { registerUser, loginUser } from '../controllers/authController';
 
 const router = Router();
 
-// User registration endpoint
-router.post('/register', registerUser);
+router.post('/register', (req, res, next) => {
+  registerUser(req, res).catch(next);
+});
+router.post('/login', (req, res, next) => {
+  loginUser(req, res).catch(next);
+});
 
-// User login endpoint
-router.post('/login', loginUser);
-
-import { Request, Response, NextFunction } from 'express';
-
-export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+export default router;
