@@ -1,57 +1,68 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User'; // Assuming you have a User model defined
-import { generateToken } from '../utils/jwt';
+import pool from '../utils/db';
 
-class AuthController {
-    async register(req: Request, res: Response) {
-        const { username, password } = req.body;
-
-        try {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = await User.create({ username, password: hashedPassword });
-            res.status(201).json({ message: 'User registered successfully', userId: newUser.id });
-        } catch (error) {
-            res.status(500).json({ message: 'Error registering user', error });
+// Registration endpoint
+export const registerUser = async (req: Request, res: Response) => {
+    try {
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'Missing required fields.' });
         }
+
+        // Hash the password for secure storage
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert new user into the database
+        const result = await pool.query(
+            `INSERT INTO users (username, email, password)
+             VALUES ($1, $2, $3) RETURNING id, username, email`,
+            [username, email, hashedPassword]
+        );
+
+        return res.status(201).json(result.rows[0]);
+    } catch (error: any) {
+        console.error('Error registering user:', error);
+        return res.status(500).json({ message: error.message });
     }
+};
 
-    async login(req: Request, res: Response) {
-        const { username, password } = req.body;
-
-        try {
-            const user = await User.findOne({ where: { username } });
-            if (!user) {
-                return res.status(401).json({ message: 'Invalid credentials' });
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(401).json({ message: 'Invalid credentials' });
-            }
-
-            const token = generateToken(user.id);
-            res.status(200).json({ message: 'Login successful', token });
-        } catch (error) {
-            res.status(500).json({ message: 'Error logging in', error });
+// Login endpoint function
+export const loginUser = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required.' });
         }
-    }
 
-    async getProfile(req: Request, res: Response) {
-        const userId = req.user.id; // Assuming user ID is stored in req.user
+        // Look up the user by email
+        const result = await pool.query(
+            `SELECT id, username, email, password FROM users WHERE email = $1`,
+            [email]
+        );
 
-        try {
-            const user = await User.findByPk(userId);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-
-            res.status(200).json({ username: user.username });
-        } catch (error) {
-            res.status(500).json({ message: 'Error fetching user profile', error });
+        const user = result.rows[0];
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials.' });
         }
-    }
-}
 
-export default new AuthController();
+        // Compare supplied password with stored hash
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Invalid credentials.' });
+        }
+
+        // Generate JWT using secret from .env
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET as string,
+            { expiresIn: '1h' }
+        );
+
+        return res.json({ token });
+    } catch (error: any) {
+        console.error('Error logging in:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
