@@ -1,3 +1,16 @@
+# Notes on using GitHub + CoPilot from Julian Dominguez
+
+I spent all day yesterday in GitHub working with Copilot. It's very good at determining fixes, and applying those fixes directly for me. 
+
+But I often found myself talking to an AI that was going in circles trying to fix something. 
+
+Doing very similar fixes 10-15 times in a row. And I don't have enough understanding to see past what the AI sees. 
+
+So I'm stuck in the loop with it. I got stuck with GitHub Copilot on authentication and setting up my databases. 
+
+#
+
+
 /*
 Project: VeriLens - Fully Functioning Media Literacy & News Aggregation App
 
